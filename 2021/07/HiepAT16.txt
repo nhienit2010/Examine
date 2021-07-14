@@ -1,0 +1,14 @@
+Đầu tiên em dùng gobuster để scan dir của trang web thì tìm thấy đường dẫn 
+/admin/login.php
+
+Truy cập vào thì thấy trang bắt login
+em thử payload sql injection với username là admin và password là ' or 1=1 limit 1 -- -+ thì đăng nhập thành công 
+
+Khi vào em thấy Welcome Guest!!!
+
+bấm vào file upload thì em thử up 1 file shell php bằng CURL
+
+curl -F file=@123alala.php -X POST http://45.77.45.157:10337/admi
+n/upload.php -H "Cookie: PHPSESSID=1923d38ded2586c328c0ed118b11adee;"
+
+Nhưng mà không được nên biết chắc chắn phải dùng username admin mới được.
