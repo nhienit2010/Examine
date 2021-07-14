@@ -1,6 +1,0 @@
-vào tệp robots.txt -> admin/login.php
-sau đấy thì login với sqli nhưng chỉ với guest
-đến đoạn này mình chưa làm được tiếp 
-
-:))))) 
-sorry mọi người 

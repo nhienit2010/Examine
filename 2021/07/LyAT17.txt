@@ -1,4 +1,0 @@
-- Check file robots.txt dẫn tới trang /admin/login.php
-- Tới đây dùng Blind SQL để bypass, payload:
-    admin' or 1=1#
-- Sau khi bypass được dẫn tới trang /admin/upload.php
