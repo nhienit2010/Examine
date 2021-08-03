@@ -1,0 +1,33 @@
+Trong vòng 2 tiếng, em tạm thời hiểu sơ qua thuật toán nhờ có hint sẵn trong bài
+hệ thống mật mã Cramer–Shoup được phát triển bởi Ronald Cramer and Victor Shoup là một thuật toán mã hoá bất đối xứng giống như RSA, Diffie-Hellman, Elgamal
+Nó giống như phiên bản nâng cấp của Elgamal, nhưng khó bị bẻ cong hơn là nhờ sử dụng hàm băm.
+Mô tả thuật toán :
+1. Sinh Khoá
+  Alice chọn một nhóm Cyclic G có bậc là q: sau đó lấy ngẫu nhiên 2 phần tử sinh khác nhau g1,g2
+  Chọn 5 giá trị ngẫu nhiên (x1,x2,y1,y2,z) in Zmod(q)
+  Alice tính : c = g1^x1 * g2^x2 ; d = g1^y1 * g2^y2 ; h = g1 ^ z
+  Alice công khai : (c,d,h) cùng với (G,q,g1,g2) là public key 
+  Alice giữ bí mật : (x1,x2,y1,y2,z) là secret key
+
+2. Mã hoá
+  Để encrypt tin nhắn : m cho Alice, Bob sử dụng public key của Alice gồm : (G,q,g1,g2,c,d,h)
+  Bob chuyển m thành 1 phần tử trong nhóm G
+  Bob chọn ngẫu nhiên k in Zmod(q) sau đó tính :
+  u1 = g1 ^ k , u2 = g2 ^ k 
+  e = (h ^ k) * m
+  a = H(u1,u2,e) với H là hàm băm 1 chiều phổ biến VD : SHA256
+  v = c^k * d^(k*a)
+Sau đó Bob gửi ciphertext là : (u1,u2,e,v) :D 
+
+3. Giải mã 
+Để giải mã ciphertext (u1,u2,e,v) , Alice sử dụng secret key của cô ấy : (x1,x2,y1,y2,z)
+Alice tính a = H(u1,u2,e) 
+Sau đó Alice xác nhận u1^x1 * u2^x2 * (u1^y1 * u2^y1)^a ?= v
+  Nếu đúng : (giải thích : (g1^k)^x1 * (g2^k)^x2 * ((g1^k)^y1 * (g2^k)^y2)^a = (g1^x1 * g2^x2)^k * (g1^y1 * g2^y2)^(k*a) = c^k * d^(k*a) = v (dpcm)
+  Nếu sai : dừng luôn, k giải gì nữa :D  #chống chosen cipher attack
+Alice tính bản rõ m bằng cách : m = e/(u1^z) ( vì u1^z = (g1^k)^z = h^k => m = e/(u1^z) = e/(h^k) )
+
+về ý tưởng lúc đầu : em nghĩ là chọn đầu vào m là mấy số đặc biệt như 0,1 em nghĩ khi chọn m = 1 thì có thể tính discrete_log dễ dàng nhưng đã nhầm =="
+chị Uyên đưa ra 2 hướng :
+  nhóm yếu, factor order (not recommend) 
+  Hash Collision có nghĩa là chọn u1_,u2_,e_ khác u1,u2,e mà hàm hash vẫn giữ nguyên mục đích em nghĩ chắc là để dễ tính z :D ....
